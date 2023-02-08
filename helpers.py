@@ -1,16 +1,6 @@
-from collections import namedtuple
-
-_config = None
-
-
-def get_parser_args():
-    pass
-
-
-def get_config():
-    if not _config:
-        pass
-    return _config
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service as ChromeService
+from webdriver_manager.chrome import ChromeDriverManager
 
 
 def get_logger():
@@ -18,7 +8,7 @@ def get_logger():
 
 
 def get_driver():
-    pass
+    return webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()))
 
 
 def get_credentials():
