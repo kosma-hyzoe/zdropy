@@ -1,17 +1,11 @@
-import pytest
-
-from pages.login import LoginPage
-from models import Credentials
+from helpers.models import ClassInfo
 from helpers import get_driver, get_credentials
+from project import book_class
 
 
 def test_login():
     driver = get_driver()
-    driver.get("https://zdrofit.perfectgym.pl/ClientPortal2/#/Login")
-
     credentials = get_credentials()
-    login_form = LoginPage(driver)
-    login_form.login(credentials)
-    print("foobar")
-
+    class_info = ClassInfo("Zdrofit Bemowo", "foo", "bar", "foobar")
+    book_class(driver, credentials, class_info)
 

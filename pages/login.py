@@ -1,8 +1,8 @@
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.wait import WebDriverWait
 
-from config import Timeout
-from helpers import get_webdriver_wait
+from config import MEDIUM_TIMEOUT
 from pages.booking import BookingPage
 
 
@@ -17,7 +17,7 @@ class LoginPage(object):
 
     # todo make a method for switching languages if needed because of the poor login button locator
     def login(self, credentials) -> BookingPage:
-        login_input_field = get_webdriver_wait(self.driver, Timeout.MEDIUM).until(
+        login_input_field = WebDriverWait(self.driver, MEDIUM_TIMEOUT).until(
             EC.element_to_be_clickable(self.login_input_field_locator))
         login_input_field.click()
         login_input_field.send_keys(credentials.login)
