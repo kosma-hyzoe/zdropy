@@ -1,26 +1,23 @@
 import datetime
 
-from helpers.models import RetryAfter
+CHECK_CLASS_WHEN_SCHEDULING: bool = True
+# in seconds
+RETRY_AFTER: int = 2 * 60
 
-REGISTRATION_TIME_DELTA = datetime.timedelta(days=2)
-RETRY_AFTER = RetryAfter("minutes", 2)
-JOIN_WAIT_LIST = True
+REGISTRATION_TIME_DELTA: datetime.timedelta = datetime.timedelta(days=2)
 
-LOGIN_PAGE_URL = "https://zdrofit.perfectgym.pl/ClientPortal2/#/Login"
+JOIN_WAIT_LIST: bool = True
 
-SHORT_TIMEOUT = 0.5
-MEDIUM_TIMEOUT = 5.
-LONG_TIMEOUT = 5.
+SHORT_TIMEOUT: float = 0.5
 
+MEDIUM_TIMEOUT: float = 5.
 
+LONG_TIMEOUT: float = 5.
 
-OPTIONS = [
-
-]
-
-EXPERIMENTAL_OPTIONS = [
+OPTIONS: list[str] = [
 
 ]
 
+EXPERIMENTAL_OPTIONS: list[str] = [
 
-
+]

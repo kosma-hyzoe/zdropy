@@ -1,12 +1,18 @@
 import calendar
 import datetime
+from datetime import datetime
+
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
 from webdriver_manager.chrome import ChromeDriverManager
 
+import config
+from constants import DATE_FORMAT
 
-TIME_FORMAT = "%H:%M"
-DATE_FORMAT = "%Y-%m-%d"
+
+def get_registration_datetime(class_info) -> datetime:
+    class_datetime = datetime.datetime.strptime("T".join([class_info.date, class_info.time]), "%Y-%m-%dT%H:%M")
+    return class_datetime - config.REGISTRATION_TIME_DELTA
 
 
 def get_date(day_of_week: str):
@@ -27,7 +33,6 @@ def get_driver():
     return webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()))
 
 
-# todo move to sth like helpers/validators.py if it grows
 def is_valid_date(date: str) -> bool:
     try:
         datetime.datetime.strptime(date, DATE_FORMAT)
@@ -42,5 +47,3 @@ def is_valid_time(time: str):
         return True
     except ValueError:
         return False
-
-# todo check_class()?

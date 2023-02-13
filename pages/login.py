@@ -4,18 +4,18 @@ from selenium.webdriver.support.wait import WebDriverWait
 
 from config import MEDIUM_TIMEOUT
 from pages.booking import BookingPage
+from pages.page import Page
 
 
 # page_url = https://zdrofit.perfectgym.pl/ClientPortal2/#/Login
-class LoginPage(object):
+class LoginPage(Page):
     login_input_field_locator = (By.NAME, "Login")
     password_input_field_locator = (By.NAME, "Password")
     log_in_button_locator = (By.XPATH, "//*[@id='confirm' and contains(@text, 'Login')]")
 
     def __init__(self, driver):
-        self.driver = driver
+        super().__init__(driver)
 
-    # todo make a method for switching languages if needed because of the poor login button locator
     def login(self, credentials) -> BookingPage:
         login_input_field = WebDriverWait(self.driver, MEDIUM_TIMEOUT).until(
             EC.element_to_be_clickable(self.login_input_field_locator))

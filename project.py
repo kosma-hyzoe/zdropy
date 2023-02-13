@@ -1,63 +1,80 @@
 import argparse
 import os
-
+import sys
 import schedule
-from datetime import datetime
 import calendar
-
 from dotenv import load_dotenv
 
 import config
-from helpers.helpers import get_driver, get_date, is_valid_date, is_valid_time
-from helpers.models import ClassInfo, Credentials
+import constants
 from pages.login import LoginPage
+from helpers import get_driver, get_date, get_registration_datetime
+from helpers import is_valid_date, is_valid_time
+
+from models import ClassInfo, Credentials
 
 
 def main():
-    class_info = get_class_info()
     driver = get_driver()
+    credentials = get_credentials()
+    class_info = get_class_info()
+    registration_datetime = get_registration_datetime(class_info)
 
-    # todo a separate method for this?
-    class_datetime = datetime.strptime("T".join([class_info.date, class_info.time]), "%Y-%m-%dT%H:%M")
-    registration_datetime = class_datetime - config.REGISTRATION_TIME_DELTA
+    if config.CHECK_CLASS_WHEN_SCHEDULING:
+        check_class(driver, credentials, class_info)
 
-    if config.RETRY_AFTER.unit == "minutes":
-        schedule.every(config.RETRY_AFTER.value).minutes(registration_datetime).do(
-            book_class(driver, class_info))
-    elif config.RETRY_AFTER.unit == "seconds":
-        schedule.every(config.RETRY_AFTER.value).seconds(registration_datetime).do(book_class(driver, class_info))
+    schedule.every(config.RETRY_AFTER).seconds.at(registration_datetime).do(
+        book_class(driver, credentials, class_info))
 
-    # todo prettify
-    try:
-        while True:
+    while True:
+        try:
             schedule.run_pending()
-    except EOFError:
-        pass
-    # todo handle cases for registration failure
-    except:
-        pass
+        except EOFError:
+            sys.exit(0)
+        except Exception:
+            pass
 
 
 def book_class(driver, credentials, class_info):
-    driver.get(config.LOGIN_PAGE_URL)
-    login_form = LoginPage(driver)
-    booking_page = login_form.login(credentials)
-    booking_page.ensure_list_view()
+    try:
+        driver.get(constants.LOGIN_PAGE_URL)
+        login_form = LoginPage(driver)
+        booking_page = login_form.login(credentials)
+        booking_page.ensure_list_view()
 
-    if class_info.club and booking_page.is_desired_club_selected(class_info):
-        booking_page.change_club(class_info)
+        if class_info.club and not booking_page.is_club_selected(class_info):
+            booking_page.change_club(class_info)
 
-    booking_page.book_class(class_info)
+        booking_page.book_class(class_info)
+    finally:
+        driver.quit()
 
 
-def get_class_info():
+def check_class(driver, credentials, class_info):
+    try:
+        driver.get(constants.LOGIN_PAGE_URL)
+        login_form = LoginPage(driver)
+        booking_page = login_form.login(credentials)
+        booking_page.ensure_list_view()
+
+        if class_info.club and booking_page.is_club_selected(class_info):
+            booking_page.change_club(class_info)
+
+        if booking_page.is_class_available(class_info):
+            print("Class check successful.")
+
+    finally:
+        driver.quit()
+        raise AssertionError("Class check failed - check the provided class info.")
+
+
+def get_class_info() -> ClassInfo:
     parser = argparse.ArgumentParser()
 
-    # todo helps
-    parser.add_argument('name')
-    time_arg = parser.add_argument('time')
-    date_arg = parser.add_argument('date')
-    parser.add_argument('--club', "-c", type=str, default=None)
+    parser.add_argument('name', help="name of the class (case sensitive)")
+    time_arg = parser.add_argument('time', help='time of the class, formatted as %H:%M')
+    date_arg = parser.add_argument('date', help='date of the class, formatted as %Y-%m-%d')
+    parser.add_argument('--club', "-c", type=str, default=None, help="full club name (case sensitive)")
 
     class_info = parser.parse_args()
 

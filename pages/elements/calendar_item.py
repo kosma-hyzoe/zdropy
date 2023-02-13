@@ -10,7 +10,6 @@ class CalendarItem(object):
         self.element = element
 
     def book_or_join_wait_list(self):
-        # todo proper logging
         self.element.find_element(*self.CLASS_ITEM_ACTIONS_LOCATOR).click()
 
     def get_name(self):
@@ -25,6 +24,5 @@ class CalendarItem(object):
     def is_awaitable(self):
         return True if 'is-awaitable' in self.element.get_attribute('class') else False
 
-
-
-    # todo get_state(self)
+    def is_booked(self):
+        return True if 'is-booked' in self.element.get_attribute('class') else False

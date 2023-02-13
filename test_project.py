@@ -1,4 +1,4 @@
-from helpers.models import ClassInfo
+from models import ClassInfo
 from helpers import get_driver, get_credentials
 from project import book_class
 
