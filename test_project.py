@@ -1,11 +1,16 @@
+import pytest
+
+import constants
 from models import ClassInfo
-from helpers import get_driver, get_credentials
-from project import book_class
+from helpers import get_driver
+from project import book_class, get_credentials
 
 
-def test_login():
-    driver = get_driver()
-    credentials = get_credentials()
-    class_info = ClassInfo("Zdrofit Bemowo", "foo", "bar", "foobar")
-    book_class(driver, credentials, class_info)
+def test_validators():
+    ...
 
+
+@pytest.mark.parametrize("browser", constants.SUPPORTED_BROWSERS)
+def test_calendar_page_displays_on_all_supported_browsers(browser):
+    driver = get_driver(browser)
+    book_class(driver, credentials=get_credentials(), class_info=None)

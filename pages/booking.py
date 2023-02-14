@@ -7,15 +7,13 @@ from pages.elements.calendar_item import CalendarItem
 from pages.page import Page
 
 
-# page_url = https://zdrofit.perfectgym.pl/ClientPortal2/#/Classes
 class BookingPage(Page):
     CHANGE_CLUB_BUTTON_LOCATOR = (By.CLASS_NAME, 'cp-choose-club')
     CALENDAR_ITEM_LOCATOR = (By.CLASS_NAME, 'cp-calendar-item')
-    LOGO_LOCATOR = (By.CLASS_NAME, 'cp-header-logo')
     CLUB_SECONDARY_TITLE_LOCATOR = (By.CLASS_NAME, 'secondary-title')
 
-    def __init__(self, driver):
-        super().__init__(driver)
+    def __init__(self, driver, timeout: int = config.DEFAULT_TIMEOUT):
+        super().__init__(driver, timeout, self.CALENDAR_ITEM_LOCATOR)
 
     def change_club(self, class_info):
         change_club_button = self.driver.find_element(*self.CHANGE_CLUB_BUTTON_LOCATOR)
@@ -38,16 +36,23 @@ class BookingPage(Page):
         else:
             return False
 
-    def book_class(self, class_info: ClassInfo):
+    def book_class(self, class_info: ClassInfo, join_wait_list: bool = config.JOIN_WAIT_LIST):
         calendar_item = self._get_desired_calendar_item(class_info)
 
-        if calendar_item.is_bookable() or (calendar_item.is_awaitable() and config.JOIN_WAIT_LIST):
+        if calendar_item.is_bookable() or (calendar_item.is_awaitable() and join_wait_list):
             calendar_item.book_or_join_wait_list()
         else:
             raise AssertionError("Error when trying to book the class: class is not bookable and/or awaitable")
 
         if not calendar_item.is_booked():
             raise AssertionError("Error when trying to book the class: can't confirm booking")
+
+    def is_class_valid(self, class_info) -> bool:
+        try:
+            self._get_desired_calendar_item(class_info)
+            return True
+        except AssertionError:
+            return False
 
     def _get_club_calendar_url(self, club: str) -> str:
         try:
@@ -56,18 +61,14 @@ class BookingPage(Page):
         except NoSuchElementException:
             raise ValueError(f"No club named '{club}' found")
 
-    def is_class_available(self, class_info) -> bool:
-        try:
-            self._get_desired_calendar_item(class_info)
-            return True
-        except AssertionError:
-            return False
-
     def _get_desired_calendar_item(self, class_info) -> CalendarItem:
         current_url = self.driver.current_url
         if class_info.date not in current_url:
-            date_parameter = current_url[current_url.index("date="):current_url.index("&")]
-            self.driver.get(current_url.replace(date_parameter, f"date={class_info.date}"))
+            if "date=" in current_url:
+                date_parameter = current_url[current_url.index("date="):current_url.index("&")]
+                self.driver.get(current_url.replace(date_parameter, f"date={class_info.date}"))
+            else:
+                self.driver.get(current_url + "&date=" + class_info.date)
 
         for calendar_item in self._get_calendar_items():
             if calendar_item.get_name() == class_info.name and calendar_item.get_start_time() == class_info.time:

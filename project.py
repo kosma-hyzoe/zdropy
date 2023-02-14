@@ -15,10 +15,10 @@ from models import ClassInfo, Credentials
 
 
 def main():
-    driver = get_driver()
+    driver = get_driver(config.BROWSER)
     credentials = get_credentials()
     class_info = get_class_info()
-    registration_datetime = get_registration_datetime(class_info)
+    registration_datetime = get_registration_datetime(class_info, 2)
 
     if config.CHECK_CLASS_WHEN_SCHEDULING:
         check_class(driver, credentials, class_info)
@@ -60,7 +60,7 @@ def check_class(driver, credentials, class_info):
         if class_info.club and booking_page.is_club_selected(class_info):
             booking_page.change_club(class_info)
 
-        if booking_page.is_class_available(class_info):
+        if booking_page.is_class_valid(class_info):
             print("Class check successful.")
 
     finally:

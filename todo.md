@@ -3,7 +3,6 @@
 ## Urgent
 
 * retry interval as parameter for book_class(), use sleep instead of schedule.every()
-* Logger
 * validate that pages display on calling init
 * chrome and firefox
 * wait before checking CalendarItem.is_booked()?
