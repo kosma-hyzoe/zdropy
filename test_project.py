@@ -1,16 +1,41 @@
 import pytest
 
+import config
 import constants
-from models import ClassInfo
+import testdata
 from helpers import get_driver
-from project import book_class, get_credentials
+from pages.login import LoginPage
+from project import book_class, get_credentials, check_class
 
 
-def test_validators():
-    ...
+def test_get_credentials():
+    try:
+        driver = get_driver()
+        driver.get(constants.LOGIN_PAGE_URL)
+        login_form = LoginPage(driver)
+        login_form.login(get_credentials())
+    except AttributeError:
+        pytest.fail(f"Failed to login with provided credentials.")
 
 
-@pytest.mark.parametrize("browser", constants.SUPPORTED_BROWSERS)
-def test_calendar_page_displays_on_all_supported_browsers(browser):
-    driver = get_driver(browser)
-    book_class(driver, credentials=get_credentials(), class_info=None)
+def test_check_class():
+    try:
+        check_class(get_driver(), get_credentials(), testdata.valid_class_info)
+    except AttributeError:
+        pytest.fail(f"Failed to check class: {testdata.valid_class_info}")
+    with pytest.raises(AttributeError):
+        check_class(get_driver(), get_credentials(), testdata.invalid_class_info)
+
+
+def test_book_class():
+    # try to book a class
+    try:
+        book_class(get_driver(), get_credentials(), testdata.valid_class_info, retry=False)
+    except AttributeError:
+        pytest.fail(f"Failed to book class: {testdata.valid_class_info}")
+    # try to book the same class again, expect it to fail
+    with pytest.raises(AttributeError):
+        book_class(get_driver(), get_credentials(), testdata.valid_class_info, retry=False)
+
+
+

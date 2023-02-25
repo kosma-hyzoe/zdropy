@@ -4,8 +4,9 @@ import datetime
 BROWSER: str = "chrome"
 
 CHECK_CLASS_WHEN_SCHEDULING: bool = True
-# in seconds
-RETRY_AFTER: int = 2 * 60
+# in seconds. set as "None" if you don't want to retry
+RETRY: bool = True
+RETRY_AFTER_DURATION: int = 60
 # in days
 REGISTRATION_TIME_DELTA: int = 2 
 

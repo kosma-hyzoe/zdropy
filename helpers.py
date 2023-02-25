@@ -15,7 +15,8 @@ from constants import DATE_FORMAT, SUPPORTED_BROWSERS
 from models import ClassInfo
 
 
-def get_registration_datetime(class_info: ClassInfo, timedelta_in_days: int) -> datetime.datetime:
+def get_registration_datetime(class_info: ClassInfo, timedelta_in_days: int = config.REGISTRATION_TIME_DELTA)\
+        -> datetime.datetime:
     class_datetime = datetime.datetime.strptime("T".join([class_info.date, class_info.time]), "%Y-%m-%dT%H:%M")
     registration_time_delta = datetime.timedelta(days=timedelta_in_days)
     return class_datetime - registration_time_delta
@@ -31,7 +32,7 @@ def get_date(day_of_week: str) -> str:
         return (today + datetime.timedelta(days=delta)).strftime(DATE_FORMAT)
 
 
-def get_driver(browser: str):
+def get_driver(browser: str = config.BROWSER):
     if browser not in SUPPORTED_BROWSERS:
         raise
 

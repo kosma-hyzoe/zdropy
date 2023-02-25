@@ -26,3 +26,6 @@ class CalendarItem(object):
 
     def is_booked(self):
         return True if 'is-booked' in self.element.get_attribute('class') else False
+
+    def is_awaiting(self):
+        return True if 'is-awaiting' in self.element.get_attribute('class') else False
