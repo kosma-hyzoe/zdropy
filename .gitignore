@@ -1,8 +1,7 @@
-## My files 
-
 .idea/
 temp/debugging.py
 temp/temp.html
+testdata.py
 
 ## Python .gitignore template from GitHub
 

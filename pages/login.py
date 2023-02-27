@@ -6,7 +6,6 @@ from pages.booking import BookingPage
 from pages.page import Page
 
 
-# page_url = https://zdrofit.perfectgym.pl/ClientPortal2/#/Login
 class LoginPage(Page):
     LOGIN_INPUT_FIELD_LOCATOR = (By.NAME, "Login")
     PASSWORD_INPUT_FIELD_LOCATOR = (By.NAME, "Password")
@@ -14,7 +13,6 @@ class LoginPage(Page):
 
     def __init__(self, driver, timeout: int = config.DEFAULT_TIMEOUT):
         super().__init__(driver, timeout, self.LOGIN_INPUT_FIELD_LOCATOR)
-        self.wait_until_is_loaded()
 
     def login(self, credentials) -> BookingPage:
         login_input_field = self.wait.until(EC.element_to_be_clickable(self.LOGIN_INPUT_FIELD_LOCATOR))

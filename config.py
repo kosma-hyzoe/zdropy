@@ -1,14 +1,13 @@
-import datetime
-
 # supported browser settings: "firefox", "chrome"
 BROWSER: str = "chrome"
 
 CHECK_CLASS_WHEN_SCHEDULING: bool = True
-# in seconds. set as "None" if you don't want to retry
+# enable/disable the attempt to retry booking
 RETRY: bool = True
+# in seconds
 RETRY_AFTER_DURATION: int = 60
 # in days
-REGISTRATION_TIME_DELTA: int = 2 
+REGISTRATION_TIME_DELTA: int = 2
 
 JOIN_WAIT_LIST: bool = True
 

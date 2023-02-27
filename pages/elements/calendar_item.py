@@ -1,9 +1,10 @@
 from selenium.webdriver.common.by import By
 
 
-class CalendarItem(object):
+class CalendarColumn(object):
     NAME_LOCATOR = (By.CLASS_NAME, 'calendar-item-name')
     START_TIME_LOCATOR = (By.CLASS_NAME, 'calendar-item-start')
+    CALENDAR_ITEM_LOCATOR = (By.CLASS_NAME, 'cp-calendar-item')
     CLASS_ITEM_ACTIONS_LOCATOR = (By.CLASS_NAME, 'class-item-actions')
 
     def __init__(self, element):
@@ -19,13 +20,17 @@ class CalendarItem(object):
         return self.element.find_element(*self.START_TIME_LOCATOR).text
 
     def is_bookable(self):
-        return True if 'is-bookable' in self.element.get_attribute('class') else False
+        calendar_item = self.element.find_element(*self.CALENDAR_ITEM_LOCATOR)
+        return True if 'is-bookable' in calendar_item.get_attribute('class') else False
 
     def is_awaitable(self):
-        return True if 'is-awaitable' in self.element.get_attribute('class') else False
+        return True if 'is-awaitable' in self.element.find_element(*self.CALENDAR_ITEM_LOCATOR)\
+            .get_attribute('class') else False
 
     def is_booked(self):
-        return True if 'is-booked' in self.element.get_attribute('class') else False
+        calendar_item = self.element.find_element(*self.CALENDAR_ITEM_LOCATOR)
+        return 'is-booked' in calendar_item.get_attribute('class')
 
     def is_awaiting(self):
-        return True if 'is-awaiting' in self.element.get_attribute('class') else False
+        return True if 'is-awaiting' in self.element.find_element(*self.CALENDAR_ITEM_LOCATOR)\
+            .get_attribute('class') else False

@@ -1,6 +1,5 @@
 import pytest
 
-import config
 import constants
 import testdata
 from helpers import get_driver
@@ -20,22 +19,25 @@ def test_get_credentials():
 
 def test_check_class():
     try:
-        check_class(get_driver(), get_credentials(), testdata.valid_class_info)
+        # check a class using valid class info
+        check_class(get_credentials(), testdata.valid_class_info)
     except AttributeError:
         pytest.fail(f"Failed to check class: {testdata.valid_class_info}")
     with pytest.raises(AttributeError):
-        check_class(get_driver(), get_credentials(), testdata.invalid_class_info)
+        # check a class using invalid class info. expect it to fail
+        check_class(get_credentials(), testdata.invalid_class_info)
 
 
 def test_book_class():
-    # try to book a class
     try:
-        book_class(get_driver(), get_credentials(), testdata.valid_class_info, retry=False)
+        # try to book a class
+        book_class(get_credentials(), testdata.valid_class_info, retry=False)
     except AttributeError:
         pytest.fail(f"Failed to book class: {testdata.valid_class_info}")
-    # try to book the same class again, expect it to fail
     with pytest.raises(AttributeError):
-        book_class(get_driver(), get_credentials(), testdata.valid_class_info, retry=False)
+        # try to book the same class again, expect it to fail
+        book_class(get_credentials(), testdata.valid_class_info, retry=False)
+
 
 
 

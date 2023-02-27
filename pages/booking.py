@@ -1,18 +1,21 @@
-from selenium.common import NoSuchElementException
+import time
+
+from selenium.common import NoSuchElementException, StaleElementReferenceException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 
 import config
 from models import ClassInfo
-from pages.elements.calendar_item import CalendarItem
+from pages.elements.calendar_item import CalendarColumn
 from pages.page import Page
 
 
 class BookingPage(Page):
     CHANGE_CLUB_BUTTON_LOCATOR = (By.CLASS_NAME, 'cp-choose-club')
     ANY_CATEGORY_FILTER_LOCATOR = (By.XPATH, "//span[contains(text(), 'Any category')]")
-    CALENDAR_ITEM_LOCATOR = (By.CLASS_NAME, 'cp-calendar-item')
+    CALENDAR_ITEM_LOCATOR = (By.CLASS_NAME, 'cp-class-list-day-col')
     CLUB_SECONDARY_TITLE_LOCATOR = (By.XPATH, "//span[contains(@class, 'secondary-title')]")
+    LIST_VIEW_BUTTON_LOCATOR = (By.XPATH, "//span[contains(@class, 'glyphicon-cp-list')]")
 
     def __init__(self, driver, timeout: int = config.DEFAULT_TIMEOUT):
         super().__init__(driver, timeout, self.ANY_CATEGORY_FILTER_LOCATOR)
@@ -45,20 +48,22 @@ class BookingPage(Page):
         self._change_date(class_info)
         calendar_item = self._get_desired_calendar_item(class_info)
 
+        self.wait_until_is_loaded()
         if calendar_item.is_bookable() or (calendar_item.is_awaitable() and join_wait_list):
             calendar_item.book_or_join_wait_list()
         else:
-            raise AttributeError("Error when trying to book the class: class is not bookable and/or awaitable")
+            raise AttributeError
 
         self.driver.refresh()
         self.wait_until_is_loaded()
-        calendar_item = self._get_desired_calendar_item(class_info)
 
-        if not calendar_item.is_booked():
+        if not self._get_desired_calendar_item(class_info).is_booked():
             if join_wait_list and calendar_item.is_awaiting():
                 print("Wait list joined.")
             else:
-                raise AttributeError("Error when trying to book the class: can't confirm booking")
+                raise AttributeError
+        else:
+            print("Class booked successfully")
         return BookingPage(self.driver)
 
     def is_class_valid(self, class_info) -> bool:
@@ -69,6 +74,10 @@ class BookingPage(Page):
             return True
         except AttributeError:
             return False
+
+    def wait_until_is_loaded(self):
+        self.wait.until(EC.invisibility_of_element_located((By.CLASS_NAME, "baf-load-mask-spinner")))
+        self.wait.until(EC.visibility_of_element_located(self.ANY_CATEGORY_FILTER_LOCATOR))
 
     def _get_club_calendar_url(self, club: str) -> str:
         try:
@@ -88,13 +97,13 @@ class BookingPage(Page):
                 self.driver.get(current_url + "?date=" + class_info.date)
         return BookingPage(self.driver)
 
-    def _get_desired_calendar_item(self, class_info) -> CalendarItem:
+    def _get_desired_calendar_item(self, class_info) -> CalendarColumn:
         for calendar_item in self._get_calendar_items():
             if calendar_item.get_name() == class_info.name and calendar_item.get_start_time() == class_info.time:
                 return calendar_item
 
         raise AttributeError("Error when trying to locate the calendar item for the class")
 
-    def _get_calendar_items(self) -> list[CalendarItem]:
+    def _get_calendar_items(self) -> list[CalendarColumn]:
         calendar_items = self.driver.find_elements(*self.CALENDAR_ITEM_LOCATOR)
-        return [CalendarItem(calendar_item) for calendar_item in calendar_items]
+        return [CalendarColumn(calendar_item) for calendar_item in calendar_items]

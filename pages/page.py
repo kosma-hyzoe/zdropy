@@ -18,8 +18,7 @@ class Page(object):
         except NoSuchElementException:
             return False
 
-    def wait_until_is_loaded(self):
-        self.wait.until(EC.element_to_be_clickable(self.element_to_wait_for_locator))
+
 
     def wait_until_is_closed(self):
         self.wait.until(EC.invisibility_of_element_located(self.element_to_wait_for_locator))
