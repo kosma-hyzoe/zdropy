@@ -2,7 +2,6 @@ import os
 import sys
 import time
 import argparse
-import datetime
 import calendar
 
 from dotenv import load_dotenv
@@ -24,8 +23,7 @@ def main():
     if not run_params.skip_check:
         check_class(credentials, run_params.class_info)
 
-    # registration_datetime = get_registration_datetime(run_params.class_info)
-    registration_datetime = datetime.datetime.now() + datetime.timedelta(seconds=10)
+    registration_datetime = get_registration_datetime(run_params.class_info)
 
     scheduler = BlockingScheduler()
     scheduler.add_job(book_class, 'date', run_date=registration_datetime,
@@ -95,10 +93,6 @@ def get_run_params() -> RunParams:
     parser.add_argument('--club', '-c', type=str, default=None, help="full club name (case sensitive)")
 
     parser.add_argument('--skip-check', '-s', action='store_true', help="don't check lesson validity")
-
-    # if len(sys.argv) == 1 or sys.argv[1] in ['-h', '--help']:
-    #     parser.print_help()
-    #     sys.exit(0)
 
     run_params = parser.parse_args()
     if run_params.date.capitalize() in calendar.day_name:

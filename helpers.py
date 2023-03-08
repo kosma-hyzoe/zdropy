@@ -11,7 +11,7 @@ from selenium.webdriver.firefox.service import Service as FirefoxService
 from webdriver_manager.firefox import GeckoDriverManager
 
 import config
-from constants import DATE_FORMAT, SUPPORTED_BROWSERS
+from constants import DATE_FORMAT
 from models import ClassInfo
 
 
