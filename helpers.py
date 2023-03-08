@@ -33,9 +33,6 @@ def get_date(day_of_week: str) -> str:
 
 
 def get_driver(browser: str = config.BROWSER):
-    if browser not in SUPPORTED_BROWSERS:
-        raise
-
     if browser == "chrome":
         options = ChromeOptions()
         [options.add_argument(option) for option in config.DRIVER_OPTIONS]
