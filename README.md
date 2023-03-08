@@ -30,7 +30,7 @@ that it's available and there were no typos in the class info.
 1. Create a `.env` file in the project directory and input your login info:
 ``` 
 # zdropy/.env
-LOGIN=your.login.probably@an.email.adress
+LOGIN=your.login.probably@an.email.address
 PASSWORD=your_password
 ```
 2. Make sure Python3 and Chrome (pre-configured by default) or Firefox is installed.
