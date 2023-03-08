@@ -46,6 +46,7 @@ class BookingPage(Page):
     def book_class(self, class_info: ClassInfo, join_wait_list: bool = config.JOIN_WAIT_LIST) -> "BookingPage":
         self.ensure_list_view()
         self._change_date(class_info)
+        self.wait_until_is_loaded()
         calendar_item = self._get_desired_calendar_item(class_info)
 
         self.wait_until_is_loaded()
@@ -63,12 +64,13 @@ class BookingPage(Page):
             else:
                 raise AttributeError
         else:
-            print("Class booked successfully")
+            print("Class booked successfully.")
         return BookingPage(self.driver)
 
     def is_class_valid(self, class_info) -> bool:
         self.ensure_list_view()
         self._change_date(class_info)
+        self.wait_until_is_loaded()
         try:
             self._get_desired_calendar_item(class_info)
             return True

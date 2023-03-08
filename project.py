@@ -25,12 +25,12 @@ def main():
         check_class(credentials, run_params.class_info)
 
     # registration_datetime = get_registration_datetime(run_params.class_info)
-    registration_datetime = datetime.datetime.now() + datetime.timedelta(seconds=4)
+    registration_datetime = datetime.datetime.now() + datetime.timedelta(seconds=10)
 
     scheduler = BlockingScheduler()
-    scheduler.add_job(book_class, 'date', run_date=registration_datetime.date(),
+    scheduler.add_job(book_class, 'date', run_date=registration_datetime,
                       args=[credentials, run_params.class_info, False])
-    print(f"Awaiting scheduled datetime: ({registration_datetime.strftime('%c')}) ...")
+    print("Awaiting booking datetime: " + registration_datetime.strftime('%c'))
 
     try:
         scheduler.start()
@@ -38,8 +38,8 @@ def main():
         sys.exit(0)
 
 
-def book_class(credentials, class_info,
-               retry: bool = config.RETRY, retry_after_duration: int = config.RETRY_AFTER_DURATION):
+def book_class(credentials, class_info, retry: bool = config.RETRY,
+               retry_after_duration: int = config.RETRY_AFTER_DURATION):
     driver = get_driver(config.BROWSER)
     try:
         driver.get(constants.LOGIN_PAGE_URL)
@@ -55,7 +55,8 @@ def book_class(credentials, class_info,
             return
         except AttributeError:
             if retry:
-                print(f"First attempt to book class failed - retrying in {retry_after_duration} seconds...")
+                print(f"First attempt to book class failed -"
+                      f" retrying in {retry_after_duration} seconds...")
                 time.sleep(retry_after_duration)
                 driver.refresh()
                 booking_page = BookingPage(driver)
@@ -74,7 +75,7 @@ def check_class(credentials, class_info):
         login_form = LoginPage(driver)
         booking_page = login_form.login(credentials)
 
-        if class_info.club and booking_page.is_club_selected(class_info):
+        if class_info.club and not booking_page.is_club_selected(class_info):
             booking_page.change_club(class_info)
 
         if booking_page.is_class_valid(class_info):
