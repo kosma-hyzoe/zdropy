@@ -1,13 +1,11 @@
-import time
-
-from selenium.common import NoSuchElementException, StaleElementReferenceException
+from selenium.common import NoSuchElementException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 
-import config
-from models import ClassInfo
-from pages.elements.calendar_item import CalendarColumn
-from pages.page import Page
+from zdropy import config
+from zdropy.models import ClassInfo
+from zdropy.pages.elements.calendar_item import CalendarColumn
+from zdropy.pages.page import Page
 
 
 class BookingPage(Page):

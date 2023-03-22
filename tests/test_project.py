@@ -1,10 +1,10 @@
 import pytest
 
-import constants
+from zdropy import constants
 import testdata
-from helpers import get_driver
-from pages.login import LoginPage
-from project import book_class, get_credentials, check_class
+from zdropy.helpers import get_driver
+from zdropy.pages.login import LoginPage
+from zdropy.core import book_class, get_credentials, check_class
 
 
 def test_get_credentials():

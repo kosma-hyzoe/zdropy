@@ -1,9 +1,9 @@
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 
-import config
-from pages.booking import BookingPage
-from pages.page import Page
+from zdropy import config
+from zdropy.pages.booking import BookingPage
+from zdropy.pages.page import Page
 
 
 class LoginPage(Page):

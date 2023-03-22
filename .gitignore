@@ -1,5 +1,5 @@
 .idea
-testdata.py
+tests/testdata.py
 zdropy-venv
 
 ## Python .gitignore template from GitHub

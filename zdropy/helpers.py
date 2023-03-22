@@ -10,9 +10,9 @@ from selenium.webdriver.firefox.options import Options as FirefoxOptions
 from selenium.webdriver.firefox.service import Service as FirefoxService
 from webdriver_manager.firefox import GeckoDriverManager
 
-import config
-from constants import DATE_FORMAT
-from models import ClassInfo
+from zdropy import config
+from zdropy.constants import DATE_FORMAT
+from zdropy.models import ClassInfo
 
 
 def get_registration_datetime(class_info: ClassInfo, timedelta_in_days: int = config.REGISTRATION_TIME_DELTA)\

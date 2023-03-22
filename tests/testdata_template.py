@@ -1,4 +1,4 @@
-from models import ClassInfo
+from zdropy.models import ClassInfo
 
 valid_class_info = ClassInfo(
     name='',

@@ -7,16 +7,16 @@ import calendar
 from dotenv import load_dotenv
 from apscheduler.schedulers.blocking import BlockingScheduler
 
-import config
-import constants
-from pages.login import LoginPage
-from pages.booking import BookingPage
-from helpers import get_date, get_driver, get_registration_datetime
-from helpers import is_valid_date, is_valid_time
-from models import ClassInfo, Credentials, RunParams
+from zdropy import config
+from zdropy import constants
+from zdropy.pages.login import LoginPage
+from zdropy.pages.booking import BookingPage
+from zdropy.helpers import get_date, get_driver, get_registration_datetime
+from zdropy.helpers import is_valid_date, is_valid_time
+from zdropy.models import ClassInfo, Credentials, RunParams
 
 
-def main():
+def run():
     credentials = get_credentials()
     run_params = get_run_params()
 
@@ -113,4 +113,4 @@ def get_credentials() -> Credentials:
 
 
 if __name__ == '__main__':
-    main()
+    run()
