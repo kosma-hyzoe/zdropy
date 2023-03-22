@@ -22,7 +22,6 @@ and here comes zdropy – run the program in the background, and it will book th
 class automatically! Selenium goes through the motions of your web browser as if
 it was you, but faster. By default, the class will be checked first to make sure 
 that it's available and there were no typos in the class info.
-[See a demo on YouTube](https://youtu.be/nSgE0pPtX0A)
 
 
 ## How to run
@@ -39,7 +38,7 @@ PASSWORD=your_password
 Most notably, you specify whether to join the wait list if booking fails, 
 or if the program should retry the booking process on a failed attempt
 (i.e. due to server overload on perfectgym)   
-5. Run the program with `python3 project.py {arguments}`,
+5. Run the program with `python3 -m /path/to/package/zdropy {arguments}`,
 specifying the required positional arguments:
 ```
 name                  name of the class (case-sensitive)
@@ -53,15 +52,15 @@ class checking with `-s`/`--skip-check`.
 ## How to run tests
 
 Make sure `.env` file is present and filled.
-Copy the contents of `testdata_template.py` to `zdropy/testdata.py`.
+Copy the contents of `zdropy/tests/testdata_template.py` to `zdropy/tests/testdata.py`.
 Fill with your class info and run the tests.
 
 ## Examples
 
 ```
-$ python3 project.py Stretching  09:30 2023-02-15
-$ python3 project.py Tabata 18:15 2023-03-16 --club "Zdrofit Arkadia"
-$ python3 porject.py "Trening Cross" 16:30 2023-04-13 --skip-check
+$ python3 -m zdropy Stretching  09:30 2023-02-15
+$ python3 -m zdropy Tabata 18:15 2023-03-16 --club "Zdrofit Arkadia"
+$ python3 -m zdropy "Trening Cross" 16:30 2023-04-13 --skip-check
 ```
 
 ## IMPORTANT SECURITY NOTE
