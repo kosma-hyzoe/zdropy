@@ -10,3 +10,8 @@ This program is currently being developed as a final project for Harvard's
 is a little awkward, so I decided to keep it on a separate branch until
 it's finished (in a demo/alpha version of course). If you're curious how
 I'm doing, please see the branch called `cs50`.
+
+## UPDATE
+
+The CS50P phase of this project is done. The `main` branch is soon to be 
+merhed with what's going on on `dev`.
